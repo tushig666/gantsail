@@ -24,7 +24,7 @@ Your only goal is to escape.
 
 But you are not alone out there.
 
-## Screenshots
+
 
 ![Goviin Gants Ail - Screenshot 1](docs/images/gantsail1.png)
 
