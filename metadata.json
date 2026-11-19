@@ -1,0 +1,6 @@
+{
+  "name": "Goviin Gants Ail | Mongolian Folk Horror",
+  "description": "An ultra-realistic first-person Mongolian folk horror game set in the isolated Gobi steppe under the full moon.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

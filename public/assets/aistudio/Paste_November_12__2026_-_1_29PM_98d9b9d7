@@ -1,0 +1,1776 @@
+# GOVIIN GANTS AIL
+# ULTRA MAX — MASTER GAME DEVELOPMENT PROMPT
+## VERSION 1.0 | COMPLETE CREATIVE & TECHNICAL SPECIFICATION
+
+---
+
+# 0. YOUR ROLE — ELITE GAME DEVELOPMENT TEAM
+
+You are not a basic AI coding assistant.
+
+You are an elite independent AAA horror game development studio consisting of:
+
+- A senior horror game creative director with 20+ years of experience.
+- A professional game director specializing in psychological and folk horror.
+- A senior 3D environment artist.
+- A photorealistic character and creature artist.
+- A senior Three.js / WebGL engineer.
+- A gameplay systems engineer.
+- An advanced creature AI programmer.
+- A cinematic lighting artist.
+- A professional horror sound designer.
+- A music and spatial audio engineer.
+- A level designer.
+- A technical artist.
+- A game performance optimization engineer.
+- A senior QA engineer.
+
+Your task is to design, engineer, implement, test, and polish a complete, playable, short-form first-person Mongolian folk horror game.
+
+You must combine the creativity of a professional horror director with the technical discipline of an experienced game engineering team.
+
+Do not produce a generic horror game.
+
+Do not turn this into a simple walking simulator.
+
+Do not replace the requested experience with a collection of static images.
+
+Build a real-time interactive 3D game with functional movement, a physically convincing environment, an animated monster, a working chase system, dynamic audio, a river-crossing mechanic, death and restart systems, and a cinematic ending.
+
+Your first priority is to deliver a fully playable experience.
+
+---
+
+# 1. PROJECT IDENTITY
+
+GAME TITLE:
+GOVIIN GANTS AIL
+
+MONGOLIAN TITLE:
+ГОВИЙН ГАНЦ АЙЛ
+
+GENRE:
+First-Person Mongolian Folk Horror / Survival Horror / Chase Horror.
+
+VISUAL STYLE:
+Ultra-realistic / Photorealistic / Cinematic.
+
+SETTING:
+An isolated Mongolian Gobi steppe at night.
+
+TIME:
+A bright full-moon night.
+
+TARGET PLAYTIME:
+Approximately 5–10 minutes.
+
+CAMERA:
+First-person perspective.
+
+CORE OBJECTIVE:
+Escape from an isolated traditional Mongolian ger, survive a relentless pursuit by a supernatural entity, and cross a river approximately 300 meters away.
+
+CORE EXPERIENCE:
+The player wakes up alone in an abandoned Mongolian ger.
+
+There is no explanation.
+
+There are no other people.
+
+There are no nearby buildings.
+
+There is no obvious escape route except a distant river.
+
+When the player leaves the ger, an unnatural entity appears in the distance.
+
+It begins pursuing the player.
+
+The player must run.
+
+The entity does not stop.
+
+The only apparent protection is the river.
+
+The game ends when the player reaches the opposite riverbank and sees the entity stop on the other side.
+
+The experience must be short, memorable, terrifying, immersive, and visually distinctive.
+
+---
+
+# 2. CREATIVE VISION — NON-NEGOTIABLE DESIGN PHILOSOPHY
+
+The game must feel like the player has physically entered a real Mongolian landscape at night.
+
+The horror must come from the contrast between:
+
+1. A realistic, familiar Mongolian environment.
+2. An impossible supernatural creature.
+3. Complete isolation.
+4. A beautiful but unsettling full-moon landscape.
+5. A traditional Mongolian melody becoming increasingly disturbing.
+6. A relentless pursuit with no possibility of fighting back.
+
+The game must not resemble a generic American haunted-house horror game.
+
+Do not introduce random zombies, demons, ghosts, abandoned hospitals, factories, modern cities, or unrelated fantasy elements.
+
+Preserve the Mongolian cultural identity in the architecture, landscape, atmosphere, sound, clothing, and environmental storytelling.
+
+The environment should be believable before the supernatural event begins.
+
+The demon should be the only major supernatural entity.
+
+Do not overcomplicate the experience with unnecessary puzzles, inventory systems, weapons, combat, or excessive objectives.
+
+Simplicity is intentional.
+
+The goal is to make a small experience feel extraordinarily polished.
+
+---
+
+# 3. VISUAL DIRECTION — ULTRA REALISTIC
+
+Create a photorealistic cinematic horror experience.
+
+The visual target is a high-quality live-action horror film shot in the Mongolian Gobi at night.
+
+Use realistic proportions, believable materials, physically coherent lighting, detailed textures, natural camera movement, and grounded environmental design.
+
+Avoid:
+
+- Cartoon graphics.
+- Anime aesthetics.
+- Low-poly appearance.
+- Cheap mobile-game graphics.
+- Excessive neon.
+- Oversaturated colors.
+- Plastic-looking materials.
+- Exaggerated fantasy environments.
+- Generic stock-game environments.
+- Excessive visual effects.
+- Artificial-looking lighting.
+
+The game must look realistic even when the player is standing still.
+
+## 3.1 Color palette
+
+Primary colors:
+
+- Midnight blue.
+- Silver moonlight.
+- Cold gray.
+- Dusty brown.
+- Aged white.
+- Deep black.
+- Natural earth tones.
+
+Suggested color references:
+
+Midnight blue: #090F1C
+Moonlight: #AAB8C8
+Dust gray: #44433E
+Old wood: #75634D
+Aged white: #D5D0C5
+Deep black: #151515
+
+Do not use bright red as the dominant lighting color.
+
+The horror should be cold, lonely, and atmospheric.
+
+## 3.2 Photographic realism
+
+Prioritize:
+
+- Physically based rendering.
+- High-quality surface textures.
+- Realistic roughness and metallic properties.
+- Natural shadow behavior.
+- Accurate object scale.
+- Atmospheric depth.
+- Subtle environmental particles.
+- Detailed terrain.
+- Realistic cloth and hair movement.
+- Cinematic composition.
+
+Do not fake realism by simply adding heavy film grain or blur.
+
+Realism must come from geometry, materials, light, animation, and environmental detail.
+
+---
+
+# 4. ENVIRONMENT DESIGN — THE MONGOLIAN GER
+
+The opening environment must be an authentic traditional Mongolian ger.
+
+This is not an ordinary circular fantasy hut.
+
+It must have recognizable Mongolian architectural construction.
+
+## 4.1 Architectural structure
+
+Include:
+
+- Khana: traditional wooden lattice wall structure.
+- Uni: roof poles connecting the wall to the toono.
+- Toono: central circular roof opening.
+- Central support columns.
+- Traditional wooden entrance door.
+- Felt coverings.
+- Traditional interior wall coverings.
+- Authentic circular floor plan.
+
+Maintain correct proportions and a believable structure.
+
+The player must immediately recognize that this is a Mongolian ger.
+
+## 4.2 Interior objects
+
+Create a realistic abandoned interior containing:
+
+- An old wooden chest.
+- A traditional bed or sleeping area.
+- Worn carpets.
+- Old blankets.
+- Dusty household objects.
+- A small table.
+- Traditional storage objects.
+- Old bowls and containers.
+- Aged wooden surfaces.
+- Worn textiles.
+
+The environment should appear as if people stopped living there a long time ago.
+
+However, do not fill every surface with random clutter.
+
+Use controlled environmental storytelling.
+
+## 4.3 Interior condition
+
+The ger should feel abandoned, but not completely destroyed.
+
+Include:
+
+- Dust.
+- Slightly faded textiles.
+- Old wood.
+- Minor damage.
+- Worn fabric.
+- Subtle dirt.
+- Aged materials.
+
+Do not make it look like a ruined medieval building.
+
+## 4.4 Interior lighting
+
+Moonlight enters through the toono.
+
+Create realistic moonlight rays.
+
+Include subtle volumetric lighting where performance permits.
+
+The light should reveal:
+
+- Parts of the floor.
+- The bed.
+- The chest.
+- The wooden structure.
+- Dust particles.
+
+The corners remain dark.
+
+The player must be able to understand the environment without a flashlight.
+
+Do not add unnecessary artificial lighting.
+
+## 4.5 Ger entrance
+
+The entrance must be a functioning interactive door.
+
+The player must be able to approach and open it.
+
+The door should rotate naturally on its hinges.
+
+Add:
+
+- Wooden creaking.
+- Door movement audio.
+- Natural collision.
+- Realistic opening speed.
+- A short atmospheric pause.
+
+When the door opens, the moonlit steppe becomes visible.
+
+---
+
+# 5. ENVIRONMENT DESIGN — THE EMPTY GOBI
+
+The exterior is the main gameplay environment.
+
+The player exits the ger into a vast, isolated Mongolian steppe.
+
+## 5.1 Landscape
+
+Create:
+
+- Dry earth.
+- Small stones.
+- Sparse steppe grass.
+- Slight ground elevation changes.
+- Natural terrain variation.
+- Distant low mountains.
+- An enormous open horizon.
+- A flowing river approximately 300 meters away.
+
+Avoid making the environment perfectly flat.
+
+The terrain should feel naturally irregular but remain navigable.
+
+Do not create excessive obstacles that prevent the player from running.
+
+## 5.2 Sky
+
+The sky contains:
+
+- A large, bright full moon.
+- Natural stars.
+- Very subtle clouds if appropriate.
+- A dark blue-black night atmosphere.
+
+The moon should be visually important.
+
+It is the primary environmental light source.
+
+## 5.3 Moonlight
+
+Moonlight must illuminate the terrain sufficiently.
+
+IMPORTANT:
+
+The game is set at night, but the player must still see where they are running.
+
+Do not make the screen nearly black.
+
+The player must be able to identify:
+
+- The horizon.
+- The direction of the river.
+- The demon.
+- The ground.
+- Major landscape features.
+
+Use a realistic balance between visible terrain and deep shadows.
+
+## 5.4 Environmental scale
+
+The player should feel surrounded by a huge empty landscape.
+
+The river is approximately 300 meters from the ger.
+
+The playable terrain can be efficiently optimized while preserving the visual impression of a much larger world.
+
+Use distant terrain, mountain silhouettes, atmospheric perspective, and carefully designed horizon composition.
+
+Do not use obvious repeating terrain patterns.
+
+## 5.5 Wind
+
+Add subtle environmental wind.
+
+The wind should affect:
+
+- Sparse grass.
+- Small environmental particles.
+- The demon's hair.
+- The demon's clothing.
+
+Do not make the wind so strong that everything moves constantly.
+
+Silence is essential.
+
+---
+
+# 6. THE DEMON — MAIN CREATURE DESIGN
+
+This is the most important visual element of the game.
+
+The demon must remain consistent with the approved Creature Design A.
+
+Do not redesign it into another monster.
+
+## 6.1 Physical appearance
+
+Height:
+Approximately 4 meters.
+
+Body:
+Extremely tall, thin, elongated, and unnatural.
+
+Skin:
+Very pale, lifeless, slightly grayish.
+
+Eyes:
+Pure white eyes without visible pupils.
+
+Hair:
+Extremely long, tangled, messy black hair.
+
+Face:
+Mostly hidden behind the long black hair.
+
+Hands:
+Long fingers and unnaturally long black fingernails.
+
+Clothing:
+A long, torn, worn, dirty white traditional Mongolian deel.
+
+Movement:
+Appears to float slightly above the ground.
+
+The creature must look physically present in the environment.
+
+It must not resemble a transparent ghost effect.
+
+## 6.2 Face design — APPROVED DESIGN A
+
+The demon's face is mostly hidden by long black hair.
+
+This is mandatory.
+
+The player should not see a completely exposed face during the normal gameplay experience.
+
+The white eyes should be visible through gaps in the hair.
+
+The eyes must not look like bright LED lights.
+
+They should appear naturally pale and lifeless, becoming visible through the strands when illuminated by moonlight.
+
+The hair should partially conceal the forehead, nose, mouth, and cheeks.
+
+Do not expose the entire face just to make the creature more detailed.
+
+The mystery is more important than facial detail.
+
+## 6.3 Hair simulation
+
+The hair is extremely long and tangled.
+
+It should:
+
+- Cover most of the face.
+- Move subtly with environmental wind.
+- React to the creature's floating movement.
+- Lag slightly behind body movement.
+- Have multiple natural strands.
+- Avoid looking like one solid black object.
+
+If full physical hair simulation is too expensive, use optimized layered hair geometry and secondary animation.
+
+## 6.4 Clothing
+
+The white deel must look old and damaged.
+
+Include:
+
+- Torn edges.
+- Frayed fabric.
+- Dirt.
+- Discoloration.
+- Damaged sleeves.
+- Uneven lower edges.
+- Natural cloth movement.
+
+The clothing should move slightly as the creature floats.
+
+Avoid excessive blood.
+
+The contrast between the aged white clothing and black hair is essential.
+
+## 6.5 Body proportions
+
+Use a roughly 4-meter-tall silhouette.
+
+The arms should be unnaturally long.
+
+The body should be extremely thin.
+
+The head should be slightly lowered.
+
+The hands should hang unnaturally.
+
+Maintain a terrifying silhouette even when viewed from 100 meters away.
+
+## 6.6 Floating movement
+
+The demon does not walk normally.
+
+It floats approximately 10–20 centimeters above the ground.
+
+Its movement must feel unnatural but physically coherent.
+
+Animation requirements:
+
+- Subtle vertical floating motion.
+- Slight body sway.
+- Delayed head movement.
+- Natural hair movement.
+- Cloth secondary animation.
+- Unnaturally smooth forward movement.
+- No ordinary human running animation.
+
+When turning toward the player, the head should begin turning before the body.
+
+Avoid sudden robotic rotations.
+
+---
+
+# 7. OPENING CINEMATIC — WAKE UP
+
+The game begins with a black screen.
+
+No title animation should interrupt the initial atmosphere.
+
+The player hears:
+
+- Very quiet wind.
+- Subtle breathing.
+- Faint wooden creaking.
+- Extremely low environmental ambience.
+
+The player's eyes slowly open.
+
+Create an eye-opening effect using a smooth camera transition.
+
+The camera begins slightly unfocused and gradually becomes clear.
+
+The player is lying inside the Mongolian ger.
+
+The first view should include:
+
+- Part of the ceiling.
+- The toono.
+- Moonlight entering the interior.
+- Parts of the wooden structure.
+
+After the eyes open, the player can slowly move their head.
+
+The player gets up.
+
+Use a natural camera transition from lying down to standing.
+
+Do not teleport the camera instantly.
+
+The player gains control after the waking animation finishes.
+
+No monster should appear inside the ger.
+
+No jumpscare should happen during the opening.
+
+The initial feeling should be confusion and isolation.
+
+---
+
+# 8. GAMEPLAY SEQUENCE — COMPLETE EXPERIENCE
+
+The game should have one continuous primary objective.
+
+The player must leave the ger and reach the river.
+
+## PHASE 1 — WAKE UP
+
+Approximate duration: 30–45 seconds.
+
+- Black screen.
+- Eyes open.
+- The player discovers the ger interior.
+- The player gets up.
+- The player can explore briefly.
+- No instructions are displayed unnecessarily.
+
+## PHASE 2 — THE EMPTY GER
+
+Approximate duration: 30–60 seconds.
+
+The player can inspect the interior.
+
+Use small atmospheric details:
+
+- A slightly moving curtain.
+- Subtle wood creaking.
+- Wind outside.
+- Dust in moonlight.
+- An old door.
+
+Do not create unnecessary puzzles.
+
+The exit is the natural focus.
+
+## PHASE 3 — OPEN THE DOOR
+
+The player approaches the entrance.
+
+An interaction prompt appears subtly.
+
+The player opens the door.
+
+The exterior becomes visible.
+
+The moonlit landscape must feel enormous.
+
+The river should be visible in the distance.
+
+At first, nothing appears to be moving.
+
+## PHASE 4 — THE DEMON APPEARS
+
+The demon stands far away in the steppe.
+
+It must be visible from the ger entrance.
+
+It is approximately 250–300 meters away, depending on the final terrain layout.
+
+It stands completely motionless.
+
+The player should have time to recognize the silhouette.
+
+The Goolingoo-inspired melody begins very quietly.
+
+After a short delay:
+
+- The demon's head moves slightly.
+- The white eyes become noticeable.
+- Its body turns toward the player.
+- It begins floating forward.
+
+The chase starts.
+
+IMPORTANT:
+
+Do not use an immediate loud jumpscare.
+
+Build fear through recognition and anticipation.
+
+## PHASE 5 — THE CHASE
+
+The player must run toward the river.
+
+The demon continuously pursues the player.
+
+There is no combat.
+
+There is no weapon.
+
+There is no hiding system required.
+
+The player must make progress toward the river.
+
+The environment should remain readable.
+
+The demon must be visible often enough to communicate danger.
+
+However, do not force it to remain directly in the center of the camera.
+
+Allow the player to turn around and see it approaching.
+
+## PHASE 6 — THE RIVER
+
+The river is the only safe boundary.
+
+The player must enter the water and cross to the opposite bank.
+
+The water must have visible movement and realistic moonlight reflections.
+
+The player's movement changes while inside the water.
+
+Add water audio and appropriate camera feedback.
+
+The demon approaches the near bank.
+
+It does not cross the river.
+
+## PHASE 7 — THE ENDING
+
+When the player reaches the opposite bank:
+
+- The player exits the water.
+- The demon reaches the opposite riverbank.
+- It stops.
+- It remains completely motionless.
+- It stares at the player through its long black hair.
+- The Goolingoo-inspired melody stops.
+- All major horror ambience fades into silence.
+
+Allow the player to look at the creature for a few seconds.
+
+Do not immediately cut to black.
+
+The ending should feel uncomfortable and unresolved.
+
+Fade to black.
+
+Display:
+
+YOU SURVIVED.
+
+Then:
+
+ГЭХДЭЭ ТЭР ОДОО Ч ЧАМАЙГ ХАРСААР...
+
+Display the game title:
+
+ГОВИЙН ГАНЦ АЙЛ
+
+---
+
+# 9. PLAYER CONTROLLER
+
+Implement a polished first-person controller.
+
+Required features:
+
+- First-person camera.
+- Mouse look.
+- WASD movement.
+- Sprint.
+- Walking.
+- Smooth acceleration and deceleration.
+- Ground collision.
+- Gravity.
+- Jumping only if necessary for terrain navigation; do not encourage unnecessary jumping.
+- Water movement.
+- Collision with environmental objects.
+
+The controls must feel responsive.
+
+Avoid excessive camera shake.
+
+## 9.1 Movement tuning
+
+Walking should feel natural.
+
+Running should be noticeably faster.
+
+Use sensible acceleration and deceleration.
+
+Do not allow the player to instantly change direction at unrealistic speeds.
+
+The player must remain in control.
+
+## 9.2 Sprint and stamina
+
+Include a stamina system.
+
+Stamina decreases while sprinting.
+
+Stamina recovers when walking or standing still.
+
+When stamina is depleted:
+
+- Sprinting becomes unavailable.
+- Movement speed decreases.
+- The player hears heavier breathing.
+- Camera movement becomes slightly more intense.
+
+Do not make stamina so restrictive that the chase becomes impossible.
+
+Balance the chase for a first-time player.
+
+Do not display a huge HUD.
+
+Use a minimal stamina indicator that appears only when relevant.
+
+---
+
+# 10. DEMON AI — PURSUIT SYSTEM
+
+The demon must have a reliable and convincing pursuit system.
+
+Use a finite state machine.
+
+Possible states:
+
+1. DORMANT
+2. OBSERVING
+3. TURNING
+4. APPROACHING
+5. CHASING
+6. NEAR_PLAYER
+7. ATTACKING
+8. BLOCKED_BY_RIVER
+9. ENDING_STARE
+
+## 10.1 Initial state
+
+The demon begins in OBSERVING.
+
+It is visible at a distance.
+
+It does not move initially.
+
+After the designed delay, it turns toward the player.
+
+Then it transitions into CHASING.
+
+## 10.2 Chase behavior
+
+The demon must:
+
+- Continuously pursue the player.
+- Maintain a believable direction.
+- Avoid sudden teleportation.
+- Avoid passing through major terrain obstacles.
+- Stay grounded in the world coordinate system.
+- Maintain correct scale.
+- Use smooth movement.
+- Adjust movement speed based on distance and gameplay pacing.
+
+The AI must never use unrealistic instant position changes.
+
+## 10.3 Chase balance
+
+The demon should be slightly faster than a normal walking player.
+
+The sprinting player should be able to make meaningful progress toward the river.
+
+The player should feel threatened throughout the chase.
+
+The demon should be able to catch the player if the player makes poor movement decisions or fails to maintain progress.
+
+Do not make survival mathematically impossible.
+
+Test the complete route.
+
+## 10.4 Catch detection
+
+Create a reliable collision or distance-based catch system.
+
+When the demon reaches the player:
+
+- Trigger a brief attack animation.
+- Use a short camera reaction.
+- Play a disturbing audio cue.
+- Fade to black.
+- Display a death screen.
+
+Do not use an excessively long or graphically explicit death animation.
+
+## 10.5 River boundary
+
+This is a mandatory gameplay rule.
+
+When the demon reaches the near riverbank, it must stop.
+
+It must never cross the river.
+
+It must never swim after the player.
+
+It must never teleport to the opposite bank.
+
+It remains on the near side of the river and stares at the player.
+
+The demon's state becomes BLOCKED_BY_RIVER.
+
+After the player reaches the opposite bank, transition to ENDING_STARE.
+
+This behavior must be deterministic and reliable.
+
+---
+
+# 11. SIGNATURE AUDIO — GOOLINGOO-INSPIRED HORROR MELODY
+
+The sound design is one of the most important parts of this game.
+
+Approximately half of the horror experience should come from audio and silence.
+
+Use a traditional Mongolian folk-inspired musical atmosphere based on the requested Goolingoo melody.
+
+Do not use an unauthorized copyrighted recording.
+
+If a licensed recording or user-provided recording is available, use it according to its permissions.
+
+Otherwise, create an original, haunting folk-inspired arrangement rather than copying an existing commercial recording.
+
+The melody should feel recognizably Mongolian in character.
+
+It must not sound like generic Hollywood horror music.
+
+## 11.1 Dynamic distance audio
+
+The melody begins when the demon becomes visible.
+
+Its intensity depends on the distance between the player and the demon.
+
+Far distance:
+- Quiet.
+- Distant.
+- Soft.
+- Slightly muffled.
+
+Medium distance:
+- More audible.
+- Clearer melodic detail.
+- Slightly increased volume.
+
+Close distance:
+- Stronger.
+- More distorted.
+- More unsettling.
+- Subtle additional layers.
+
+Extremely close:
+- Intense.
+- Uncomfortable.
+- Distorted.
+- Strong low-frequency presence.
+
+When the demon stops at the river:
+- The melody fades completely.
+- The environment becomes silent.
+
+## 11.2 Audio implementation
+
+Use:
+
+- Web Audio API or the project's available audio engine.
+- Smooth volume interpolation.
+- Distance-based attenuation.
+- Low-pass filtering.
+- Subtle distortion.
+- Layered audio.
+- Spatial positioning where appropriate.
+
+Avoid abrupt volume jumps.
+
+The melody must transition smoothly as the distance changes.
+
+Do not restart the audio file every frame.
+
+Use a persistent audio playback system with automated parameter changes.
+
+## 11.3 Environmental sound
+
+Include:
+
+- Quiet Gobi wind.
+- Sparse grass movement.
+- Ger wood creaking.
+- Wooden door movement.
+- Footsteps on dry ground.
+- Footsteps in water.
+- Flowing river.
+- Player breathing.
+- Demon cloth movement.
+- Subtle supernatural ambience.
+
+Silence must remain an intentional part of the experience.
+
+Do not play constant horror music.
+
+---
+
+# 12. CINEMATIC SOUND DESIGN
+
+The demon should have a distinct sound identity.
+
+When it is far away, it should be almost silent.
+
+When it approaches, introduce subtle layers:
+
+- A faint unnatural fabric sound.
+- Slight low-frequency rumble.
+- Very subtle hair or cloth movement.
+- A distant supernatural texture.
+
+Avoid generic monster growling.
+
+The creature should not sound like an animal.
+
+Its presence should feel unnatural and difficult to explain.
+
+The player should primarily hear the Goolingoo-inspired melody becoming louder as the demon approaches.
+
+---
+
+# 13. WATER AND RIVER SYSTEM
+
+The river must be a real gameplay obstacle.
+
+Requirements:
+
+- Visible water surface.
+- Natural flowing animation.
+- Moonlight reflection.
+- Appropriate water depth.
+- Riverbank geometry.
+- Collision.
+- Player movement inside water.
+- Water entry sound.
+- Water movement sound.
+- Water exit transition.
+
+Do not simply teleport the player across the river.
+
+The player must physically move through it.
+
+The river should be wide enough to create a final moment of tension.
+
+Do not make the water unnecessarily deep or impossible to cross.
+
+The opposite bank must be reachable.
+
+The demon must remain unable to cross.
+
+---
+
+# 14. CAMERA AND CINEMATOGRAPHY
+
+The entire experience uses first-person perspective.
+
+Camera requirements:
+
+- Natural eye-level positioning.
+- Subtle breathing.
+- Slight head movement while walking.
+- Controlled running movement.
+- No excessive camera shake.
+- No aggressive motion blur.
+- No constant screen distortion.
+- Realistic mouse sensitivity.
+
+During the opening:
+
+Use a smooth eye-opening transition.
+
+During the chase:
+
+Use slight camera movement to communicate running.
+
+During death:
+
+Use a short, controlled camera reaction.
+
+During the ending:
+
+Allow the player to look at the demon standing across the river.
+
+Do not use third-person gameplay.
+
+Only use a separate cinematic camera if it materially improves the final ending.
+
+---
+
+# 15. USER INTERFACE
+
+The UI must be minimal.
+
+Do not create a large game HUD.
+
+Required screens:
+
+## Main menu
+
+Display:
+
+ГОВИЙН ГАНЦ АЙЛ
+
+Options:
+
+- START
+- SETTINGS
+- QUIT / RETURN, if supported.
+
+Use a dark cinematic background.
+
+The background can show an isolated ger under a full moon.
+
+Keep the typography restrained.
+
+## In-game UI
+
+Only show subtle interaction prompts when needed.
+
+Example:
+
+[ E ] OPEN DOOR
+
+Avoid:
+
+- Large objective markers.
+- Minimap.
+- Quest lists.
+- Excessive status panels.
+- Large stamina bars.
+- Unnecessary tutorials.
+
+## Pause menu
+
+Include:
+
+- RESUME
+- RESTART
+- SETTINGS
+- MAIN MENU
+
+## Death screen
+
+Display:
+
+SUBJECT LOST
+
+or:
+
+YOU WERE CAUGHT.
+
+Options:
+
+- RESTART
+- MAIN MENU
+
+Use a short fade transition.
+
+## Ending screen
+
+Display:
+
+YOU SURVIVED.
+
+ГЭХДЭЭ ТЭР ОДОО Ч ЧАМАЙГ ХАРСААР...
+
+ГОВИЙН ГАНЦ АЙЛ
+
+---
+
+# 16. SETTINGS
+
+Include functional settings:
+
+- Master volume.
+- Music volume.
+- SFX volume.
+- Mouse sensitivity.
+- Graphics quality.
+- Fullscreen.
+- Mouse control instructions.
+
+Settings must actually work.
+
+Persist settings locally where appropriate.
+
+Do not display decorative controls that do nothing.
+
+---
+
+# 17. GAME ARCHITECTURE
+
+Build a clean, maintainable project structure.
+
+Before modifying files:
+
+1. Inspect the existing project.
+2. Understand the current framework.
+3. Identify available dependencies.
+4. Preserve working functionality.
+5. Avoid unnecessary rewrites.
+
+If the environment supports React and Three.js, use the existing setup or an appropriate Three.js-based architecture.
+
+React Three Fiber may be used if it is already available or can be installed reliably.
+
+If a different compatible architecture is already established, adapt to it rather than destroying the existing project.
+
+Do not introduce Firebase or a backend unless genuinely required.
+
+This is a single-player browser game.
+
+## Suggested systems
+
+- GameManager
+- PlayerController
+- InputManager
+- CameraController
+- EnvironmentManager
+- GerBuilder
+- TerrainBuilder
+- RiverSystem
+- DemonController
+- DemonAI
+- AudioManager
+- DynamicMusicController
+- InteractionSystem
+- CollisionSystem
+- StaminaSystem
+- LightingManager
+- UIManager
+- SettingsManager
+- DeathManager
+- EndingManager
+- SaveManager
+
+Keep the architecture modular.
+
+Avoid putting the entire game into one enormous component or source file.
+
+Use reusable components and clear interfaces.
+
+---
+
+# 18. GAME STATE MANAGEMENT
+
+Create a centralized game state.
+
+Possible states:
+
+- MAIN_MENU
+- OPENING
+- PLAYER_WAKEUP
+- GER_EXPLORATION
+- DOOR_INTERACTION
+- DEMON_REVEAL
+- CHASE
+- RIVER_APPROACH
+- RIVER_CROSSING
+- ENDING
+- PLAYER_CAUGHT
+- PAUSED
+
+All important transitions must be deterministic.
+
+Prevent conflicting state changes.
+
+For example:
+
+- The chase must not start before the demon reveal.
+- The demon must not catch the player after the successful river ending.
+- The ending must not trigger before the player reaches the opposite bank.
+- The pause state must stop gameplay updates and audio progression appropriately.
+- Restart must reset the demon, player, audio and game state.
+
+---
+
+# 19. PERFORMANCE AND OPTIMIZATION
+
+The game must run smoothly in a modern desktop browser.
+
+Prioritize stable frame rate.
+
+Use:
+
+- Optimized geometry.
+- Instancing where appropriate.
+- Texture compression.
+- Efficient shadow maps.
+- Limited dynamic lights.
+- LOD.
+- Efficient terrain meshes.
+- Optimized water shaders.
+- Lightweight particles.
+- Efficient animation updates.
+- Proper resource cleanup.
+- Audio asset compression.
+
+Avoid:
+
+- Unnecessary high-poly objects.
+- Hundreds of dynamic lights.
+- Excessive transparent particles.
+- Full-resolution shadow maps everywhere.
+- Unoptimized real-time hair simulation.
+- Heavy physics for simple objects.
+- Unnecessary post-processing.
+
+Create at least three graphics quality levels if feasible:
+
+LOW
+MEDIUM
+HIGH
+
+The LOW setting must remain playable.
+
+The HIGH setting should provide the best available visual quality.
+
+Do not sacrifice the core gameplay to achieve unnecessary graphical effects.
+
+---
+
+# 20. ASSET CREATION RULES
+
+Use real assets only when they are legally available and technically suitable.
+
+Do not reference random external image URLs as if they were functioning 3D assets.
+
+Do not use static concept-art images as substitutes for actual 3D geometry.
+
+The demon must be an animated 3D entity.
+
+The ger must be a 3D environment.
+
+The river must be interactive 3D geometry.
+
+The landscape must be a navigable 3D environment.
+
+If suitable external assets are unavailable:
+
+- Create procedural geometry.
+- Build modular environment pieces.
+- Use generated textures where supported.
+- Use placeholder models only during early development.
+- Clearly separate temporary placeholders from final assets.
+
+Never claim that an asset is realistic or complete if it is actually a primitive placeholder.
+
+The final game should have a consistent visual style.
+
+---
+
+# 21. LEVEL DESIGN AND PLAYER ROUTE
+
+The experience is one compact level.
+
+The basic route:
+
+START
+→ WAKE UP INSIDE GER
+→ EXPLORE GER
+→ OPEN DOOR
+→ SEE THE EMPTY STEPPE
+→ NOTICE THE DEMON
+→ DEMON BEGINS MOVING
+→ RUN TOWARD THE RIVER
+→ CROSS THE RIVER
+→ DEMON STOPS
+→ ENDING
+
+The river must be visually identifiable from the starting area.
+
+Use natural terrain features to help the player understand the direction.
+
+Do not add artificial glowing arrows.
+
+Do not add giant objective markers.
+
+The player should understand the goal naturally.
+
+---
+
+# 22. HORROR PACING
+
+The experience should follow a controlled horror curve.
+
+### Beginning: Isolation
+
+Quiet.
+
+Uncomfortable.
+
+Familiar environment.
+
+No immediate monster.
+
+### Discovery: Something is wrong
+
+The empty ger.
+
+The open landscape.
+
+The distant white figure.
+
+The player begins to understand that something is present.
+
+### Recognition: The demon
+
+The demon is visible.
+
+The melody begins.
+
+The player realizes it is looking toward them.
+
+### Panic: Chase
+
+The demon starts moving.
+
+The melody grows louder.
+
+The player runs.
+
+The river becomes the only objective.
+
+### Desperation: Near the river
+
+The demon gets closer.
+
+Breathing becomes heavier.
+
+The music becomes more distorted.
+
+The river sound becomes clearer.
+
+### Relief: Crossing
+
+The player reaches the other bank.
+
+The demon stops.
+
+The melody disappears.
+
+### Final discomfort
+
+The demon continues staring.
+
+The player survives.
+
+But the creature does not disappear.
+
+Silence.
+
+Black screen.
+
+This pacing is more important than adding random jumpscares.
+
+---
+
+# 23. DEATH AND RESTART SYSTEM
+
+If the demon catches the player:
+
+1. Trigger a short attack reaction.
+2. Stop normal player movement.
+3. Play the death audio.
+4. Fade to black.
+5. Display the death message.
+6. Show restart options.
+
+Restart must completely reset:
+
+- Player position.
+- Player stamina.
+- Demon position.
+- Demon state.
+- Audio playback.
+- Audio volume.
+- River state.
+- Game state.
+- Camera state.
+- Ending triggers.
+
+Do not reload into a broken or partially completed game state.
+
+---
+
+# 24. ENDING QUALITY REQUIREMENTS
+
+The river ending is the definitive ending.
+
+The demon must stop on the opposite side of the river.
+
+It must not vanish.
+
+It must not explode.
+
+It must not die.
+
+It must not suddenly attack again.
+
+It remains motionless.
+
+Its white eyes are visible through its long black hair.
+
+The Goolingoo-inspired melody stops.
+
+The player experiences silence.
+
+Hold the final shot long enough for discomfort.
+
+The player should feel that they survived, but that the encounter is not truly resolved.
+
+---
+
+# 25. DEVELOPMENT STRATEGY — BUILD IN PHASES
+
+Do not attempt to generate every system simultaneously without testing.
+
+Build the project in the following phases.
+
+## PHASE 1 — CORE PLAYABLE FOUNDATION
+
+Implement:
+
+- Project setup.
+- 3D renderer.
+- Main menu.
+- First-person movement.
+- Mouse look.
+- Ger interior.
+- Ger door interaction.
+- Basic terrain.
+- River geometry.
+- Basic collision.
+
+At the end of this phase, the player must be able to start the game, wake up inside the ger, walk around, open the door and reach the exterior.
+
+## PHASE 2 — THE DEMON
+
+Implement:
+
+- Demon 3D model or best available animated representation.
+- Correct 4-meter scale.
+- Long black hair.
+- White eyes.
+- Torn white deel.
+- Floating movement.
+- Initial distant position.
+- Reveal animation.
+- Chase AI.
+- Catch detection.
+
+Do not use a static image for the monster.
+
+## PHASE 3 — AUDIO
+
+Implement:
+
+- Environmental wind.
+- Ger ambience.
+- Door audio.
+- Footsteps.
+- Water audio.
+- Player breathing.
+- Goolingoo-inspired original melody.
+- Distance-based music intensity.
+- Final silence.
+
+## PHASE 4 — COMPLETE GAMEPLAY
+
+Implement:
+
+- Stamina.
+- Chase balance.
+- River crossing.
+- Demon river boundary.
+- Death sequence.
+- Restart.
+- Ending sequence.
+- Pause menu.
+- Settings.
+
+## PHASE 5 — VISUAL POLISH
+
+Improve:
+
+- Ger materials.
+- Terrain materials.
+- Moonlight.
+- Shadows.
+- Water.
+- Hair.
+- Clothing.
+- Creature animation.
+- Cinematic composition.
+- Camera effects.
+- Atmospheric particles.
+
+## PHASE 6 — QUALITY ASSURANCE
+
+Play through the entire game from beginning to end.
+
+Find and fix:
+
+- Broken interactions.
+- Missing assets.
+- Invisible demon.
+- Incorrect demon scale.
+- Unreachable river.
+- Unfair chase.
+- Audio that does not react to distance.
+- Audio that continues after ending.
+- Broken restart.
+- Camera clipping.
+- Terrain collision problems.
+- Performance problems.
+- UI controls that do not work.
+
+Do not declare the game complete until the entire experience works.
+
+---
+
+# 26. CRITICAL GAMEPLAY TESTS
+
+You must verify all of the following:
+
+TEST 01:
+The game starts correctly.
+
+TEST 02:
+The opening eye animation works.
+
+TEST 03:
+The player can move inside the ger.
+
+TEST 04:
+The ger door opens correctly.
+
+TEST 05:
+The exterior is visible and navigable.
+
+TEST 06:
+The demon appears at the intended distance.
+
+TEST 07:
+The demon remains motionless during its initial reveal.
+
+TEST 08:
+The demon turns toward the player.
+
+TEST 09:
+The Goolingoo-inspired melody starts at the correct time.
+
+TEST 10:
+The demon begins pursuing the player.
+
+TEST 11:
+The demon does not teleport.
+
+TEST 12:
+The melody becomes louder as the demon approaches.
+
+TEST 13:
+The player can run toward the river.
+
+TEST 14:
+Stamina works correctly.
+
+TEST 15:
+The player can enter the river.
+
+TEST 16:
+The player can reach the opposite bank.
+
+TEST 17:
+The demon stops at the near riverbank.
+
+TEST 18:
+The demon never crosses the river.
+
+TEST 19:
+The final stare animation works.
+
+TEST 20:
+The melody stops at the ending.
+
+TEST 21:
+The ending text appears correctly.
+
+TEST 22:
+The death sequence works.
+
+TEST 23:
+Restart resets the entire experience.
+
+TEST 24:
+Settings work.
+
+TEST 25:
+The game remains playable at the selected graphics quality.
+
+---
+
+# 27. IMPLEMENTATION RULES — ABSOLUTELY IMPORTANT
+
+1. Do not return only a design document.
+2. Do not return only a technical plan.
+3. Do not create a static mockup and call it a game.
+4. Do not replace the demon with a flat image.
+5. Do not replace the river with a decorative background.
+6. Do not make the chase a scripted video.
+7. Do not use fake buttons.
+8. Do not use broken external audio links.
+9. Do not use random placeholder images as final game assets.
+10. Do not create an unplayable visual demo.
+11. Do not silently omit difficult features.
+12. Do not claim that an unimplemented feature is complete.
+13. Do not break existing project files unnecessarily.
+14. Do not introduce unnecessary dependencies.
+15. Do not overcomplicate the project.
+
+When a feature is technically difficult, implement the best practical alternative while preserving its intended gameplay behavior.
+
+For example:
+
+- If full hair simulation is too expensive, use optimized hair geometry with secondary animation.
+- If full cloth simulation is too expensive, use skeletal or vertex animation.
+- If advanced water simulation is too expensive, use a convincing animated water shader.
+- If advanced terrain streaming is unnecessary, use an optimized compact terrain.
+- If a high-quality custom demon model is not available, create a temporary animated procedural model and clearly identify it as a placeholder.
+
+Always distinguish implemented functionality from temporary approximations.
+
+---
+
+# 28. FINAL QUALITY STANDARD
+
+The final experience must satisfy these creative goals:
+
+VISUAL:
+The game feels like a realistic cinematic horror film.
+
+ENVIRONMENT:
+The Mongolian ger and Gobi landscape feel authentic.
+
+CREATURE:
+The demon is visually memorable and consistently designed.
+
+MOVEMENT:
+First-person controls are smooth and responsive.
+
+AI:
+The demon pursues the player reliably.
+
+AUDIO:
+The Goolingoo-inspired melody creates tension through distance-based intensity.
+
+GAMEPLAY:
+The river crossing is a real, functional survival objective.
+
+ENDING:
+The demon stopping across the river creates an unforgettable final image.
+
+PERFORMANCE:
+The game runs smoothly in a modern desktop browser.
+
+POLISH:
+The interface, transitions, camera, sound and animation feel cohesive.
+
+---
+
+# 29. YOUR FIRST ACTION
+
+Begin by inspecting the current project and identifying its framework, dependencies, and file structure.
+
+Then implement PHASE 1.
+
+Do not stop after writing a plan.
+
+Start building the actual playable game.
+
+After implementing the first phase:
+
+- Explain what was created.
+- List the files changed.
+- Identify what is working.
+- Identify any temporary placeholders.
+- State what remains for the next phase.
+- Make sure the project runs.
+
+Continue through the phases without destroying working functionality.
+
+If the environment allows you to implement the complete game in one continuous session, do so.
+
+If you reach an implementation limit, preserve the working project and continue from the last verified milestone.
+
+Your ultimate goal is not to produce a long explanation.
+
+Your ultimate goal is to deliver:
+
+# A COMPLETE, PLAYABLE, ULTRA-REALISTIC MONGOLIAN FOLK HORROR GAME.
+
+# GOVIIN GANTS AIL.
+
+YOU WERE NEVER SUPPOSED TO BE ALONE.
