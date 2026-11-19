@@ -1,3 +1,4 @@
+
 /**
  * Central Game Orchestrator & Loop for Goviin Gants Ail
  * Integrates Three.js rendering, audio, physics, demon AI, and state machine.
@@ -166,6 +167,10 @@ export class GameManager {
 
   public startGame() {
     this.soundEngine.init();
+
+    // Start the intro ambient when a new game begins.
+    this.soundEngine.startIntroAmbient();
+
     this.setPhase('WAKE_UP');
     this.wakeTimer = 0;
     this.player.requestPointerLock();
@@ -174,17 +179,23 @@ export class GameManager {
 
   public openDoor() {
     if (this.ger.isDoorOpen) return;
+
     // Synchronized event:
     // 1. Entrance door begins opening + 2. Dying candle immediately extinguishes
     this.ger.openDoor();
     this.player.isDoorOpen = true;
     this.soundEngine.playDoorCreak();
 
+    // Stop the intro ambient as the ger door opens.
+    this.soundEngine.stopIntroAmbient();
+
     // 3. Demon chase sequence begins immediately with zero delay
     if (this.phase === 'GER_EXPLORATION' || this.phase === 'WAKE_UP') {
       this.demon.state = 'CHASING';
       this.setPhase('CHASE');
-      // Start Goolingoo melody softly in the distance
+
+      // Start Goolingoo melody softly in the distance.
+      // The intro ambient has already been stopped above.
       this.soundEngine.startDemonMelody();
     }
   }
@@ -204,6 +215,8 @@ export class GameManager {
 
   public restartGame() {
     this.soundEngine.stopDemonMelody();
+    this.soundEngine.stopIntroAmbient();
+
     this.player.reset();
     this.demon.reset(-95);
     this.ger.resetDoor();
@@ -214,11 +227,14 @@ export class GameManager {
     this.revealTimer = 0;
     this.endingTimer = 0;
 
+    // startGame() starts the intro ambient again from the beginning.
     this.startGame();
   }
 
   public returnToMainMenu() {
     this.soundEngine.stopDemonMelody();
+    this.soundEngine.stopIntroAmbient();
+
     this.player.exitPointerLock();
     this.player.reset();
     this.demon.reset(-95);
@@ -451,7 +467,10 @@ export class GameManager {
     if (this.swTimerId !== null) clearTimeout(this.swTimerId);
     window.removeEventListener('resize', this.onResize);
     this.player.exitPointerLock();
+
     this.soundEngine.stopDemonMelody();
+    this.soundEngine.stopIntroAmbient();
+
     this.renderer.dispose();
     if (this.renderer.domElement.parentElement) {
       this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
