@@ -21,6 +21,7 @@ export class SoundEngine {
   private musicWaveShaper: WaveShaperNode | null = null;
   private isMusicPlaying = false;
   private melodyTimer: number | null = null;
+  private melodyNoteTimers: number[] = [];
 
   // Legacy demon ambient nodes (kept for safe cleanup; no longer started with melody)
   private demonAmbientBuffer: AudioBuffer | null = null;
@@ -43,6 +44,7 @@ export class SoundEngine {
   // Ambient Nodes
   private windGain: GainNode | null = null;
   private windFilter: BiquadFilterNode | null = null;
+  private windTimer: number | null = null;
   private isWindActive = false;
 
   private riverGain: GainNode | null = null;
@@ -50,8 +52,16 @@ export class SoundEngine {
 
   private breathGain: GainNode | null = null;
   private breathOsc: OscillatorNode | null = null;
+  private breathTimer: number | null = null;
   private isBreathing = false;
   private breathRate = 1.0;
+
+  // Dedicated Jumpscare Bus & One-Shot Guards
+  private jumpscareGain: GainNode | null = null;
+  private jumpscareCompressor: DynamicsCompressorNode | null = null;
+  private isJumpscareActive = false;
+  private jumpscareTriggered = false;
+  private jumpscareStoppers: Array<() => void> = [];
 
   // State
   private settings: GameSettings = {
@@ -111,6 +121,21 @@ export class SoundEngine {
       this.sfxGain.gain.setValueAtTime(this.settings.sfxVolume, this.ctx.currentTime);
       this.sfxGain.connect(this.masterGain);
 
+      // Dedicated Jumpscare Channel (high headroom limiter preserves sudden transient punch)
+      this.jumpscareGain = this.ctx.createGain();
+      this.jumpscareGain.gain.setValueAtTime(
+        Math.min(1.6, this.settings.sfxVolume * 1.35),
+        this.ctx.currentTime,
+      );
+      this.jumpscareCompressor = this.ctx.createDynamicsCompressor();
+      this.jumpscareCompressor.threshold.setValueAtTime(-3, this.ctx.currentTime);
+      this.jumpscareCompressor.knee.setValueAtTime(6, this.ctx.currentTime);
+      this.jumpscareCompressor.ratio.setValueAtTime(3, this.ctx.currentTime);
+      this.jumpscareCompressor.attack.setValueAtTime(0.005, this.ctx.currentTime);
+      this.jumpscareCompressor.release.setValueAtTime(0.14, this.ctx.currentTime);
+      this.jumpscareGain.connect(this.jumpscareCompressor);
+      this.jumpscareCompressor.connect(this.masterGain);
+
       this.startWindAmbience();
       this.startRiverAmbience();
       this.isInitialized = true;
@@ -127,8 +152,17 @@ export class SoundEngine {
     const t = this.ctx.currentTime;
 
     this.masterGain.gain.setTargetAtTime(this.settings.masterVolume, t, 0.05);
-    this.musicGain.gain.setTargetAtTime(this.settings.musicVolume, t, 0.05);
+    if (!this.isJumpscareActive) {
+      this.musicGain.gain.setTargetAtTime(this.settings.musicVolume, t, 0.05);
+    }
     this.sfxGain.gain.setTargetAtTime(this.settings.sfxVolume, t, 0.05);
+    if (this.jumpscareGain) {
+      this.jumpscareGain.gain.setTargetAtTime(
+        Math.min(1.6, this.settings.sfxVolume * 1.35),
+        t,
+        0.03,
+      );
+    }
 
     if (this.introAmbientGain && this.introAmbientSource) {
       this.introAmbientGain.gain.setTargetAtTime(
@@ -250,26 +284,36 @@ export class SoundEngine {
       });
   }
 
-  public stopIntroAmbient() {
-    // Invalidate pending loads so audio cannot start after the door opens.
+  public stopIntroAmbient(immediate = false) {
+    // Invalidate pending loads so audio cannot start after the door opens or death.
     this.introAmbientRequestId++;
 
     const source = this.introAmbientSource;
     const gain = this.introAmbientGain;
 
+    if (this.introAmbientStopTimer !== null) {
+      clearTimeout(this.introAmbientStopTimer);
+      this.introAmbientStopTimer = null;
+    }
+
     if (!this.ctx || !source || !gain) return;
 
     const t = this.ctx.currentTime;
+    const fadeSec = immediate ? 0.02 : this.INTRO_AMBIENT_FADE_SECONDS;
 
     gain.gain.cancelScheduledValues(t);
     gain.gain.setValueAtTime(gain.gain.value, t);
-    gain.gain.linearRampToValueAtTime(
-      0,
-      t + this.INTRO_AMBIENT_FADE_SECONDS,
-    );
+    gain.gain.linearRampToValueAtTime(0, t + fadeSec);
 
-    if (this.introAmbientStopTimer !== null) {
-      clearTimeout(this.introAmbientStopTimer);
+    if (immediate) {
+      this.introAmbientSource = null;
+      this.introAmbientGain = null;
+      try {
+        source.stop(t + fadeSec + 0.01);
+      } catch {
+        // Ignore already-stopped source
+      }
+      return;
     }
 
     this.introAmbientStopTimer = window.setTimeout(() => {
@@ -279,7 +323,11 @@ export class SoundEngine {
 
       this.introAmbientSource = null;
       this.introAmbientGain = null;
-      source.stop();
+      try {
+        source.stop();
+      } catch {
+        // Ignore already-stopped source
+      }
     }, this.INTRO_AMBIENT_FADE_SECONDS * 1000);
   }
 
@@ -336,10 +384,15 @@ export class SoundEngine {
     const nextGain = 0.2 + Math.random() * 0.3;
     const dur = 3 + Math.random() * 4;
 
-    this.windFilter.frequency.linearRampToValueAtTime(nextFreq, t + dur);
-    this.windGain.gain.linearRampToValueAtTime(nextGain, t + dur);
+    if (!this.isJumpscareActive) {
+      this.windFilter.frequency.linearRampToValueAtTime(nextFreq, t + dur);
+      this.windGain.gain.linearRampToValueAtTime(nextGain, t + dur);
+    }
 
-    setTimeout(() => this.modulateWind(), dur * 1000);
+    if (this.windTimer !== null) {
+      clearTimeout(this.windTimer);
+    }
+    this.windTimer = window.setTimeout(() => this.modulateWind(), dur * 1000);
   }
 
   private startRiverAmbience() {
@@ -374,7 +427,7 @@ export class SoundEngine {
   }
 
   public updateRiverProximity(distanceToRiver: number) {
-    if (!this.ctx || !this.riverGain) return;
+    if (!this.ctx || !this.riverGain || this.isJumpscareActive) return;
 
     const norm = Math.max(0, Math.min(1, 1 - (distanceToRiver - 5) / 80));
     const targetVol = norm * 0.55;
@@ -385,9 +438,14 @@ export class SoundEngine {
   // --- GOOLINGOO-INSPIRED HORROR MELODY ---
 
   public startDemonMelody() {
-    if (this.isMusicPlaying) return;
+    if (this.isMusicPlaying || this.isJumpscareActive) return;
 
     this.init();
+    if (this.ctx && this.musicGain) {
+      const t = this.ctx.currentTime;
+      this.musicGain.gain.cancelScheduledValues(t);
+      this.musicGain.gain.setTargetAtTime(this.settings.musicVolume, t, 0.08);
+    }
     this.isMusicPlaying = true;
 
     // Do not start the MP3 ambient here.
@@ -395,19 +453,33 @@ export class SoundEngine {
     this.playGoolingooPhrase(0);
   }
 
-  public stopDemonMelody() {
-    this.isMusicPlaying = false;
-
-    // Keep legacy cleanup in case an older source is still active.
-    this.stopDemonAmbient();
-
-    if (this.melodyTimer) {
+  private clearMelodyTimers() {
+    if (this.melodyTimer !== null) {
       clearTimeout(this.melodyTimer);
       this.melodyTimer = null;
     }
+    for (const timerId of this.melodyNoteTimers) {
+      clearTimeout(timerId);
+    }
+    this.melodyNoteTimers = [];
+  }
+
+  public stopDemonMelody(immediate = false) {
+    this.isMusicPlaying = false;
+    this.clearMelodyTimers();
+
+    // Keep legacy cleanup in case an older source is still active.
+    this.stopDemonAmbient(immediate);
 
     if (this.ctx && this.musicGain) {
-      this.musicGain.gain.setTargetAtTime(0, this.ctx.currentTime, 1.2);
+      const t = this.ctx.currentTime;
+      this.musicGain.gain.cancelScheduledValues(t);
+      this.musicGain.gain.setValueAtTime(this.musicGain.gain.value, t);
+      if (immediate) {
+        this.musicGain.gain.linearRampToValueAtTime(0, t + 0.02);
+      } else {
+        this.musicGain.gain.setTargetAtTime(0, t, 1.2);
+      }
     }
   }
 
@@ -508,20 +580,33 @@ export class SoundEngine {
       });
   }
 
-  private stopDemonAmbient() {
+  private stopDemonAmbient(immediate = false) {
     const source = this.demonAmbientSource;
     const gain = this.demonAmbientGain;
+
+    if (this.demonAmbientStopTimer !== null) {
+      clearTimeout(this.demonAmbientStopTimer);
+      this.demonAmbientStopTimer = null;
+    }
 
     if (!this.ctx || !source || !gain) return;
 
     const t = this.ctx.currentTime;
+    const fadeSec = immediate ? 0.02 : DEMON_AMBIENT_FADE_SECONDS;
 
     gain.gain.cancelScheduledValues(t);
     gain.gain.setValueAtTime(gain.gain.value, t);
-    gain.gain.linearRampToValueAtTime(0, t + DEMON_AMBIENT_FADE_SECONDS);
+    gain.gain.linearRampToValueAtTime(0, t + fadeSec);
 
-    if (this.demonAmbientStopTimer !== null) {
-      clearTimeout(this.demonAmbientStopTimer);
+    if (immediate) {
+      this.demonAmbientSource = null;
+      this.demonAmbientGain = null;
+      try {
+        source.stop(t + fadeSec + 0.01);
+      } catch {
+        // Ignore already-stopped source
+      }
+      return;
     }
 
     this.demonAmbientStopTimer = window.setTimeout(() => {
@@ -531,7 +616,11 @@ export class SoundEngine {
 
       this.demonAmbientSource = null;
       this.demonAmbientGain = null;
-      source.stop();
+      try {
+        source.stop();
+      } catch {
+        // Ignore already-stopped source
+      }
     }, DEMON_AMBIENT_FADE_SECONDS * 1000);
   }
 
@@ -590,10 +679,11 @@ export class SoundEngine {
     let offset = 0;
 
     currentPhrase.forEach((note) => {
-      setTimeout(() => {
+      const noteTimer = window.setTimeout(() => {
         if (!this.isMusicPlaying) return;
         this.playMorinKhuurNote(note.f, note.dur, note.slideTo);
       }, offset * 1000);
+      this.melodyNoteTimers.push(noteTimer);
 
       offset += note.dur * 0.85;
     });
@@ -833,6 +923,7 @@ export class SoundEngine {
   }
 
   public updateBreathing(staminaPercent: number, isChased: boolean) {
+    if (this.isJumpscareActive) return;
     this.init();
 
     if (!this.ctx || !this.sfxGain) return;
@@ -851,8 +942,16 @@ export class SoundEngine {
     }
   }
 
+  private stopBreathing() {
+    this.isBreathing = false;
+    if (this.breathTimer !== null) {
+      clearTimeout(this.breathTimer);
+      this.breathTimer = null;
+    }
+  }
+
   private loopBreathing() {
-    if (!this.ctx || !this.sfxGain || !this.isBreathing) return;
+    if (!this.ctx || !this.sfxGain || !this.isBreathing || this.isJumpscareActive) return;
 
     const t = this.ctx.currentTime;
     const inhaleDuration = 0.6 / this.breathRate;
@@ -888,52 +987,80 @@ export class SoundEngine {
     src.start(t);
 
     const nextCycle = (inhaleDuration + exhaleDuration + (1.2 / this.breathRate)) * 1000;
-    setTimeout(() => this.loopBreathing(), nextCycle);
+    this.breathTimer = window.setTimeout(() => this.loopBreathing(), nextCycle);
+  }
+
+  private stopBackgroundAudioImmediatelyForJumpscare() {
+    this.stopDemonMelody(true);
+    this.stopIntroAmbient(true);
+    this.stopBreathing();
+
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+
+    if (this.windGain) {
+      this.windGain.gain.cancelScheduledValues(t);
+      this.windGain.gain.setValueAtTime(this.windGain.gain.value, t);
+      this.windGain.gain.linearRampToValueAtTime(0, t + 0.025);
+    }
+
+    if (this.riverGain) {
+      this.riverGain.gain.cancelScheduledValues(t);
+      this.riverGain.gain.setValueAtTime(this.riverGain.gain.value, t);
+      this.riverGain.gain.linearRampToValueAtTime(0, t + 0.025);
+    }
   }
 
   public playCaughtJumpscare() {
+    // One-shot guard: prevent accidental double-triggers within a single death
+    if (this.jumpscareTriggered) return;
+    this.jumpscareTriggered = true;
+    this.isJumpscareActive = true;
+
     this.init();
+    this.stopBackgroundAudioImmediatelyForJumpscare();
+    this.jumpscareStoppers = [];
+  }
 
-    if (!this.ctx || !this.sfxGain) return;
+  public finishJumpscareAudio() {
+    this.isJumpscareActive = false;
+    this.jumpscareStoppers = [];
 
+    if (!this.ctx) return;
     const t = this.ctx.currentTime;
 
-    // Sub-bass impact
-    const sub = this.ctx.createOscillator();
-    const subGain = this.ctx.createGain();
+    // Restore quiet nocturnal wind for the death screen (matching original death screen ambience)
+    if (this.windGain) {
+      this.windGain.gain.cancelScheduledValues(t);
+      this.windGain.gain.setValueAtTime(0.001, t);
+      this.windGain.gain.linearRampToValueAtTime(0.24, t + 1.4);
+    }
+  }
 
-    sub.type = 'sine';
-    sub.frequency.setValueAtTime(110, t);
-    sub.frequency.exponentialRampToValueAtTime(25, t + 1.2);
+  public resetJumpscareState() {
+    this.isJumpscareActive = false;
+    this.jumpscareTriggered = false;
 
-    subGain.gain.setValueAtTime(0.8, t);
-    subGain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
+    for (const stopFn of this.jumpscareStoppers) {
+      stopFn();
+    }
+    this.jumpscareStoppers = [];
 
-    sub.connect(subGain);
-    subGain.connect(this.sfxGain);
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
 
-    sub.start(t);
-    sub.stop(t + 1.5);
-
-    // High discordant screech
-    const screech = this.ctx.createOscillator();
-    const screechGain = this.ctx.createGain();
-
-    screech.type = 'sawtooth';
-    screech.frequency.setValueAtTime(840, t);
-    screech.frequency.linearRampToValueAtTime(420, t + 0.8);
-
-    screechGain.gain.setValueAtTime(0.45, t);
-    screechGain.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
-
-    screech.connect(screechGain);
-    screechGain.connect(this.sfxGain);
-
-    screech.start(t);
-    screech.stop(t + 1.0);
-
-    this.stopDemonMelody();
-    this.stopIntroAmbient();
+    if (this.musicGain) {
+      this.musicGain.gain.cancelScheduledValues(t);
+      this.musicGain.gain.setValueAtTime(this.settings.musicVolume, t);
+    }
+    if (this.windGain) {
+      this.windGain.gain.cancelScheduledValues(t);
+      this.windGain.gain.setValueAtTime(0.32, t);
+    }
+    if (this.riverGain) {
+      this.riverGain.gain.cancelScheduledValues(t);
+      this.riverGain.gain.setValueAtTime(0.01, t);
+    }
   }
 
   public playVictoryRelief() {
@@ -941,6 +1068,20 @@ export class SoundEngine {
     this.stopDemonMelody();
     this.startIntroAmbient();
     // Victory screen: ambient plays softly with night wind and river water.
+  }
+
+  private createRawNoiseBuffer(duration: number): AudioBuffer {
+    if (!this.ctx) throw new Error('AudioContext not ready');
+
+    const length = Math.floor(this.ctx.sampleRate * duration);
+    const buffer = this.ctx.createBuffer(1, length, this.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    return buffer;
   }
 
   private createNoiseBuffer(duration: number): AudioBuffer {
@@ -969,5 +1110,27 @@ export class SoundEngine {
     }
 
     return curve;
+  }
+
+  public dispose() {
+    this.isWindActive = false;
+    if (this.windTimer !== null) {
+      clearTimeout(this.windTimer);
+      this.windTimer = null;
+    }
+    this.stopBreathing();
+    this.stopDemonMelody(true);
+    this.stopIntroAmbient(true);
+    this.resetJumpscareState();
+
+    if (this.ctx) {
+      try {
+        this.ctx.close();
+      } catch {
+        // Ignore already-closed AudioContext
+      }
+      this.ctx = null;
+    }
+    this.isInitialized = false;
   }
 }

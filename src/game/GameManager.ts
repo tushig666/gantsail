@@ -12,6 +12,7 @@ import { TerrainBuilder, TerrainInstance } from './world/TerrainBuilder';
 import { RiverBuilder, RiverInstance } from './world/RiverBuilder';
 import { Demon } from './entities/Demon';
 import { PlayerController } from './entities/PlayerController';
+import { JumpscareVisual } from './world/JumpscareVisual';
 
 export interface GameCallbacks {
   onPhaseChange: (phase: GamePhase) => void;
@@ -40,6 +41,7 @@ export class GameManager {
   private river!: RiverInstance;
   private demon!: Demon;
   private player!: PlayerController;
+  private jumpscareVisual!: JumpscareVisual;
 
   // State
   public phase: GamePhase = 'MAIN_MENU';
@@ -54,6 +56,8 @@ export class GameManager {
   private wakeTimer = 0;
   private revealTimer = 0;
   private endingTimer = 0;
+  private jumpscareTimer = 0;
+  private isCaughtSequenceActive = false;
   private isDestroyed = false;
 
   constructor(container: HTMLElement, callbacks: GameCallbacks) {
@@ -131,38 +135,53 @@ export class GameManager {
     // 5. Player Controller
     this.player = new PlayerController(this.camera, this.renderer.domElement, this.settings);
 
+    // 6. Preload full-screen close-up Goolingoo jumpscare shader pass
+    this.jumpscareVisual = new JumpscareVisual();
+
     // Player spawns inside closed ger: start with zero exterior sunlight and minimal cold bounce
     this.terrain.moonLight.intensity = 0;
     this.terrain.hemiLight.intensity = 0.045;
   }
 
+  private onKeyDown = (e: KeyboardEvent) => {
+    // Escape for pause (disabled during jumpscare sequence)
+    if (e.code === 'Escape') {
+      if (
+        this.phase !== 'MAIN_MENU' &&
+        this.phase !== 'CAUGHT' &&
+        this.phase !== 'SURVIVED' &&
+        this.phase !== 'JUMPSCARE'
+      ) {
+        this.togglePause();
+      }
+    }
+
+    // E or Space to open door (disabled once caught)
+    if (
+      (e.code === 'KeyE' || e.code === 'Space') &&
+      this.player.canInteractDoor &&
+      this.phase !== 'JUMPSCARE' &&
+      this.phase !== 'CAUGHT'
+    ) {
+      this.openDoor();
+    }
+  };
+
+  private onCanvasClick = () => {
+    if (
+      this.phase === 'GER_EXPLORATION' ||
+      this.phase === 'DEMON_REVEAL' ||
+      this.phase === 'CHASE' ||
+      this.phase === 'RIVER_CROSSING'
+    ) {
+      this.player.requestPointerLock();
+    }
+  };
+
   private setupInputEvents() {
     window.addEventListener('resize', this.onResize);
-    window.addEventListener('keydown', (e) => {
-      // Escape for pause
-      if (e.code === 'Escape') {
-        if (this.phase !== 'MAIN_MENU' && this.phase !== 'CAUGHT' && this.phase !== 'SURVIVED') {
-          this.togglePause();
-        }
-      }
-
-      // E or Space to open door
-      if ((e.code === 'KeyE' || e.code === 'Space') && this.player.canInteractDoor) {
-        this.openDoor();
-      }
-    });
-
-    // Click canvas to request pointer lock during gameplay
-    this.renderer.domElement.addEventListener('click', () => {
-      if (
-        this.phase === 'GER_EXPLORATION' ||
-        this.phase === 'DEMON_REVEAL' ||
-        this.phase === 'CHASE' ||
-        this.phase === 'RIVER_CROSSING'
-      ) {
-        this.player.requestPointerLock();
-      }
-    });
+    window.addEventListener('keydown', this.onKeyDown);
+    this.renderer.domElement.addEventListener('click', this.onCanvasClick);
   }
 
   public startGame() {
@@ -214,11 +233,19 @@ export class GameManager {
   private previousPhase: GamePhase = 'GER_EXPLORATION';
 
   public restartGame() {
-    this.soundEngine.stopDemonMelody();
-    this.soundEngine.stopIntroAmbient();
+    this.soundEngine.stopDemonMelody(true);
+    this.soundEngine.stopIntroAmbient(true);
+    this.soundEngine.resetJumpscareState();
+    this.jumpscareVisual.reset();
+
+    this.isCaughtSequenceActive = false;
+    this.jumpscareTimer = 0;
+    this.camera.fov = 65;
+    this.camera.updateProjectionMatrix();
 
     this.player.reset();
     this.demon.reset(-95);
+    this.demon.group.visible = true;
     this.ger.resetDoor();
     this.terrain.moonLight.intensity = 0;
     this.terrain.hemiLight.intensity = 0.045;
@@ -232,12 +259,20 @@ export class GameManager {
   }
 
   public returnToMainMenu() {
-    this.soundEngine.stopDemonMelody();
-    this.soundEngine.stopIntroAmbient();
+    this.soundEngine.stopDemonMelody(true);
+    this.soundEngine.stopIntroAmbient(true);
+    this.soundEngine.resetJumpscareState();
+    this.jumpscareVisual.reset();
+
+    this.isCaughtSequenceActive = false;
+    this.jumpscareTimer = 0;
+    this.camera.fov = 65;
+    this.camera.updateProjectionMatrix();
 
     this.player.exitPointerLock();
     this.player.reset();
     this.demon.reset(-95);
+    this.demon.group.visible = true;
     this.ger.resetDoor();
     this.terrain.moonLight.intensity = 0;
     this.terrain.hemiLight.intensity = 0.045;
@@ -304,13 +339,21 @@ export class GameManager {
       if (this.isDestroyed) return;
 
       const rawDt = this.clock.getDelta();
-      const delta = Math.min(rawDt, 0.05); // clamped delta per standard
+      const delta =
+        this.phase === 'JUMPSCARE' ? Math.min(rawDt, 0.12) : Math.min(rawDt, 0.05);
 
       if (this.phase !== 'PAUSED') {
         this.updateGame(delta);
       }
 
-      this.renderer.render(this.scene, this.camera);
+      if (this.phase === 'JUMPSCARE' || this.phase === 'CAUGHT') {
+        if (!this.jumpscareVisual.isOpaque()) {
+          this.renderer.render(this.scene, this.camera);
+        }
+        this.jumpscareVisual.render(this.renderer);
+      } else {
+        this.renderer.render(this.scene, this.camera);
+      }
       if (this.isSoftwareGl) {
         afterDraw(tick);
       } else {
@@ -321,7 +364,46 @@ export class GameManager {
     this.animFrameId = requestAnimationFrame(tick);
   }
 
+  private triggerJumpscareSequence() {
+    if (this.isCaughtSequenceActive) return;
+    this.isCaughtSequenceActive = true;
+    this.jumpscareTimer = 0;
+
+    // Immediately hide the 3D gameplay demon model and display the jumpscare image on frame 0
+    this.demon.group.visible = false;
+    this.jumpscareVisual.update(0, this.camera.aspect);
+
+    this.setPhase('JUMPSCARE');
+    this.player.exitPointerLock();
+    this.soundEngine.playCaughtJumpscare();
+  }
+
+  private updateJumpscareSequence(delta: number) {
+    this.jumpscareTimer += delta;
+
+    // Full-screen Goolingoo close-up shake & animation (settles cleanly at 3.75s without fading out)
+    this.jumpscareVisual.update(this.jumpscareTimer, this.camera.aspect);
+
+    // Jumpscare animation finished (~3.80s): keep image completely visible, stop shake/animation, fade in YOU DIED
+    if (this.jumpscareTimer >= 3.80) {
+      this.jumpscareVisual.setStillBackground(this.camera.aspect);
+      this.camera.fov = 65;
+      this.camera.updateProjectionMatrix();
+      this.soundEngine.finishJumpscareAudio();
+      this.setPhase('CAUGHT');
+    }
+  }
+
   private updateGame(delta: number) {
+    if (this.phase === 'JUMPSCARE') {
+      this.updateJumpscareSequence(delta);
+      return;
+    }
+    if (this.phase === 'CAUGHT') {
+      this.jumpscareVisual.setStillBackground(this.camera.aspect);
+      return;
+    }
+
     const isInside = this.ger.checkInside(this.player.position);
     this.ger.updateInterior(delta, this.clock.elapsedTime);
 
@@ -447,14 +529,14 @@ export class GameManager {
       this.soundEngine.playVictoryRelief();
     }
 
-    // 6. Demon Catch Detection (Attack distance <= 2.2m)
+    // 6. Demon Catch Detection (Attack distance <= 2.2m, single-trigger guard)
     if (
+      !this.isCaughtSequenceActive &&
       distToDemon <= 2.2 &&
       (this.phase === 'CHASE' || this.phase === 'RIVER_CROSSING' || this.phase === 'DEMON_REVEAL')
     ) {
-      this.setPhase('CAUGHT');
-      this.soundEngine.playCaughtJumpscare();
-      this.player.exitPointerLock();
+      this.triggerJumpscareSequence();
+      return;
     }
 
     // 7. Update HUD stats
@@ -466,10 +548,12 @@ export class GameManager {
     if (this.animFrameId !== null) cancelAnimationFrame(this.animFrameId);
     if (this.swTimerId !== null) clearTimeout(this.swTimerId);
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('keydown', this.onKeyDown);
+    this.renderer.domElement.removeEventListener('click', this.onCanvasClick);
     this.player.exitPointerLock();
 
-    this.soundEngine.stopDemonMelody();
-    this.soundEngine.stopIntroAmbient();
+    this.soundEngine.dispose();
+    this.jumpscareVisual.dispose();
 
     this.renderer.dispose();
     if (this.renderer.domElement.parentElement) {

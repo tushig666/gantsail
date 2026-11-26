@@ -50,7 +50,6 @@ export const HUD: React.FC<HUDProps> = ({
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [menuBgError, setMenuBgError] = useState(false);
-  const [deathPortraitError, setDeathPortraitError] = useState(false);
 
   const isPlaying =
     phase === 'GER_EXPLORATION' ||
@@ -63,6 +62,7 @@ export const HUD: React.FC<HUDProps> = ({
     if (
       phase === 'MAIN_MENU' ||
       phase === 'PAUSED' ||
+      phase === 'JUMPSCARE' ||
       phase === 'CAUGHT' ||
       phase === 'SURVIVED'
     ) {
@@ -667,43 +667,31 @@ export const HUD: React.FC<HUDProps> = ({
       {/* 9. DEATH SCREEN (CAUGHT)                                       */}
       {/* ============================================================== */}
       {phase === 'CAUGHT' && (
-        <div className="absolute inset-0 bg-[#020305]/96 pointer-events-auto flex flex-col items-center justify-center p-8 z-50 text-center animate-fade-in">
-          {/* Subtle Crimson Edge Vignette */}
+        <div className="absolute inset-0 bg-transparent pointer-events-auto flex flex-col items-center justify-center p-8 z-50 text-center">
+          {/* Same Full-Screen Color Goolingoo Jumpscare Image Kept Permanently Visible */}
+          <img
+            src="/assets/aistudio/image_80904e6a.png"
+            alt=""
+            referrerPolicy="no-referrer"
+            className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+          />
+
+          {/* Subtle Contrast Vignette Fading In Behind Foreground Typography */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none animate-fade-in"
             style={{
               background:
-                'radial-gradient(circle at 50% 45%, rgba(65,10,12,0.16) 0%, rgba(18,4,6,0.68) 62%, rgba(2,2,4,0.98) 100%)',
+                'radial-gradient(circle at 50% 60%, rgba(2,3,5,0.48) 0%, rgba(18,4,6,0.28) 52%, rgba(2,2,4,0.62) 100%)',
             }}
           />
 
-          {/* Feather-Masked Entity Stare (cropped strictly to center portrait panel) */}
-          {!deathPortraitError && (
-            <div
-              className="relative w-[290px] h-[340px] sm:w-[360px] sm:h-[410px] mb-[-115px] sm:mb-[-135px] overflow-hidden pointer-events-none opacity-45"
-              style={{
-                WebkitMaskImage:
-                  'radial-gradient(ellipse 64% 68% at 50% 42%, black 14%, rgba(0,0,0,0.45) 48%, transparent 78%)',
-                maskImage:
-                  'radial-gradient(ellipse 64% 68% at 50% 42%, black 14%, rgba(0,0,0,0.45) 48%, transparent 78%)',
-              }}
-            >
-              <img
-                src="/assets/aistudio/goviin_gants_ail_chutgur_f0b3cc00.png"
-                alt=""
-                referrerPolicy="no-referrer"
-                onError={() => setDeathPortraitError(true)}
-                className="absolute max-w-none h-auto pointer-events-none"
-                style={{
-                  width: '355%',
-                  left: '-111.5%',
-                  top: '-4%',
-                }}
-              />
-            </div>
-          )}
+          {/* Layout Spacer Preserving Exact Original YOU DIED & Button Positions */}
+          <div
+            aria-hidden="true"
+            className="relative w-[290px] h-[340px] sm:w-[360px] sm:h-[410px] mb-[-115px] sm:mb-[-135px] pointer-events-none"
+          />
 
-          <div className="relative z-10 flex flex-col items-center max-w-md">
+          <div className="relative z-10 flex flex-col items-center max-w-md animate-fade-in">
             <h2
               className="font-cinzel text-5xl sm:text-7xl font-bold tracking-[0.24em] text-[#ebe6dc]"
               style={{

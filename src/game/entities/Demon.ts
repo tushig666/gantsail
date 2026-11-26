@@ -46,7 +46,7 @@ export class Demon {
 
   // AI speed tuning (original)
   public walkSpeed = 3.8;
-  public chaseSpeed = 5.2;
+  public chaseSpeed = 5.72;
 
   constructor() {
     this.group = new THREE.Group();
@@ -420,6 +420,26 @@ export class Demon {
     });
   }
 
+  public setJumpscareLungePose(worldPos: THREE.Vector3, lookAtPos: THREE.Vector3) {
+    this.position.copy(worldPos);
+    this.group.position.copy(this.position);
+
+    const dx = lookAtPos.x - worldPos.x;
+    const dz = lookAtPos.z - worldPos.z;
+    const yaw = Math.atan2(dx, dz);
+    this.currentRotationY = yaw;
+    this.targetRotationY = yaw;
+    this.group.rotation.y = yaw;
+
+    // Slight eerie forward & sideways head lunge for the 0.3s 3D catch impact
+    this.headCurrentRotY = 0;
+    this.headTargetRotY = 0;
+    this.headGroup.rotation.set(0.12, 0, -0.18);
+    this.torsoGroup.rotation.z = 0.04;
+    this.leftArmGroup.rotation.x = -0.85;
+    this.rightArmGroup.rotation.x = -0.95;
+  }
+
   public reset(spawnZ = -110) {
     this.position.set(22, 0, spawnZ);
     this.state = 'OBSERVING';
@@ -427,6 +447,10 @@ export class Demon {
     this.targetRotationY = Math.PI;
     this.headCurrentRotY = 0;
     this.headTargetRotY = 0;
+    this.torsoGroup.rotation.set(0, 0, 0);
+    this.headGroup.rotation.set(0, 0, 0);
+    this.leftArmGroup.rotation.set(0, 0, 0);
+    this.rightArmGroup.rotation.set(0, 0, 0);
     this.group.position.copy(this.position);
     this.group.rotation.y = this.currentRotationY;
   }

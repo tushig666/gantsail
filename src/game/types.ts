@@ -11,6 +11,7 @@ export type GamePhase =
   | 'CHASE'
   | 'RIVER_CROSSING'
   | 'SURVIVED'
+  | 'JUMPSCARE'
   | 'CAUGHT'
   | 'PAUSED';
 
