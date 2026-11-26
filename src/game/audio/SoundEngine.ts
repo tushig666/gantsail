@@ -7,6 +7,7 @@
 import { GameSettings } from '../types';
 
 const DEMON_AMBIENT_URL = new URL('./ambient/goolingoo_ambient.mp3', import.meta.url).href;
+const JUMPSCARE_AUDIO_URL = new URL('./sfx/goolingoo_jumpscare.mp3', import.meta.url).href;
 const DEMON_AMBIENT_VOLUME_RATIO = 0.06;
 const DEMON_AMBIENT_FADE_SECONDS = 0.8;
 
@@ -59,6 +60,10 @@ export class SoundEngine {
   // Dedicated Jumpscare Bus & One-Shot Guards
   private jumpscareGain: GainNode | null = null;
   private jumpscareCompressor: DynamicsCompressorNode | null = null;
+  private jumpscareBuffer: AudioBuffer | null = null;
+  private jumpscareBufferPromise: Promise<AudioBuffer> | null = null;
+  private jumpscareSource: AudioBufferSourceNode | null = null;
+  private jumpscarePlaybackRequestId = 0;
   private isJumpscareActive = false;
   private jumpscareTriggered = false;
   private jumpscareStoppers: Array<() => void> = [];
@@ -139,6 +144,14 @@ export class SoundEngine {
       this.startWindAmbience();
       this.startRiverAmbience();
       this.isInitialized = true;
+
+      // Preload the one-shot jumpscare MP3 early so it can start immediately on catch.
+      const initializedContext = this.ctx;
+      if (initializedContext) {
+        void this.loadJumpscareBuffer(initializedContext).catch((error: unknown) => {
+          console.warn('Failed to preload jumpscare audio:', error);
+        });
+      }
     } catch (e) {
       console.warn('Failed to initialize Web Audio context:', e);
     }
@@ -1011,15 +1024,107 @@ export class SoundEngine {
     }
   }
 
+  private loadJumpscareBuffer(ctx: AudioContext): Promise<AudioBuffer> {
+    if (this.jumpscareBuffer) {
+      return Promise.resolve(this.jumpscareBuffer);
+    }
+
+    if (!this.jumpscareBufferPromise) {
+      this.jumpscareBufferPromise = fetch(JUMPSCARE_AUDIO_URL)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to load jumpscare audio (${response.status})`);
+          }
+          return response.arrayBuffer();
+        })
+        .then((data) => ctx.decodeAudioData(data))
+        .then((buffer) => {
+          this.jumpscareBuffer = buffer;
+          return buffer;
+        })
+        .catch((error: unknown) => {
+          this.jumpscareBufferPromise = null;
+          throw error;
+        });
+    }
+
+    return this.jumpscareBufferPromise;
+  }
+
+  private async startJumpscarePlayback(ctx: AudioContext, requestId: number) {
+    try {
+      const buffer = await this.loadJumpscareBuffer(ctx);
+
+      // Ignore a late load if the player has restarted, disposed, or changed AudioContext.
+      if (
+        !this.ctx ||
+        this.ctx !== ctx ||
+        requestId !== this.jumpscarePlaybackRequestId ||
+        !this.jumpscareTriggered ||
+        !this.jumpscareGain
+      ) {
+        return;
+      }
+
+      // Ensure this one-shot can never overlap a previous jumpscare source.
+      this.stopJumpscarePlayback();
+
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = false;
+      source.connect(this.jumpscareGain);
+
+      source.onended = () => {
+        source.disconnect();
+        if (this.jumpscareSource === source) {
+          this.jumpscareSource = null;
+        }
+      };
+
+      this.jumpscareSource = source;
+      source.start(ctx.currentTime);
+    } catch (error) {
+      console.error('Unable to play jumpscare audio:', error);
+    }
+  }
+
+  private stopJumpscarePlayback() {
+    const source = this.jumpscareSource;
+    this.jumpscareSource = null;
+
+    if (!source) return;
+
+    source.onended = null;
+    try {
+      source.stop();
+    } catch {
+      // Ignore an already-stopped source.
+    }
+    try {
+      source.disconnect();
+    } catch {
+      // Ignore an already-disconnected source.
+    }
+  }
+
   public playCaughtJumpscare() {
-    // One-shot guard: prevent accidental double-triggers within a single death
+    // One-shot guard: prevent accidental double-triggers within a single death.
     if (this.jumpscareTriggered) return;
+
+    this.init();
+    if (!this.ctx) return;
+
     this.jumpscareTriggered = true;
     this.isJumpscareActive = true;
 
-    this.init();
     this.stopBackgroundAudioImmediatelyForJumpscare();
     this.jumpscareStoppers = [];
+
+    const activeContext = this.ctx;
+    if (!activeContext) return;
+
+    const requestId = this.jumpscarePlaybackRequestId;
+    void this.startJumpscarePlayback(activeContext, requestId);
   }
 
   public finishJumpscareAudio() {
@@ -1040,6 +1145,8 @@ export class SoundEngine {
   public resetJumpscareState() {
     this.isJumpscareActive = false;
     this.jumpscareTriggered = false;
+    this.jumpscarePlaybackRequestId++;
+    this.stopJumpscarePlayback();
 
     for (const stopFn of this.jumpscareStoppers) {
       stopFn();
@@ -1122,6 +1229,9 @@ export class SoundEngine {
     this.stopDemonMelody(true);
     this.stopIntroAmbient(true);
     this.resetJumpscareState();
+    // AudioBuffers belong to their AudioContext; discard the cached buffer on disposal.
+    this.jumpscareBuffer = null;
+    this.jumpscareBufferPromise = null;
 
     if (this.ctx) {
       try {
